@@ -36,20 +36,29 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Buy peacock feathers' for row in rows),
-            "New to-do item did not appear in table"
-        )
+        # self.assertTrue(
+        #     any(row.text == '1: Buy peacock feathers' for row in rows),
+        #     "New to-do item did not appear in table -- its text was:\n%s" % (
+        #         table.text,
+        #     )
+        # )
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
 
         #此時仍有一個文字方塊，讓使用者可以輸入另一個項目
         #輸入"使用孔雀羽毛製作蒼蠅"
-        self.fail('Finish the test!')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Use peacock feathers to make a fly')
+        inputbox.send_keys(Keys.ENTER)
 
         #網頁再次更新，現在清單中有兩個代辦項目
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+        self.assertIn('2: Use peacock feathers to make a fly', [row.text for row in rows])
 
         #網頁產生一個唯一的URL給使用者
         #網頁有一些文字說明這個效果
-
+        self.fail('Finish the test!')
         #前往URL-顯示使用者的代辦清單
 
 if __name__ == '__main__':
