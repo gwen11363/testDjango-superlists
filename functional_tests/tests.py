@@ -52,7 +52,8 @@ class NewVisitorTest(LiveServerTestCase):
         #按下enter時，網頁會更新，現在網頁列出
         #"1.購買孔雀羽毛"，一個待辦事項清單項目
         inputbox.send_keys(Keys.ENTER)
-
+        user_unique_list_url = self.browser.current_url
+        self.assertRegex(user_unique_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
 
         #此時仍有一個文字方塊，讓使用者可以輸入另一個項目
@@ -63,8 +64,32 @@ class NewVisitorTest(LiveServerTestCase):
 
         #網頁再次更新，現在清單中有兩個代辦項目
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
+        self.check_for_row_in_list_table('1: Buy peacock feathers')
 
-        #網頁產生一個唯一的URL給使用者
-        #網頁有一些文字說明這個效果
-        self.fail('Finish the test!')
-        #前往URL-顯示使用者的代辦清單
+        #新的使用者來到網站
+
+        #使用新的瀏覽器工作階段以確保上一位使用者的資料都不會被cookie等機制送出
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        #新使用者造訪網頁。沒有任何前一位使用者的清單內容
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
+
+        #輸入一個新的項目，做出一個新的清單
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+
+        #新使用者取得獨一無二url
+        other_user_unique_url = self.browser.current_url
+        self.assertRegex(other_user_unique_url, '/lists/.+')
+        self.assertNotEqual(user_unique_list_url, other_user_unique_url)
+
+        #還是沒有任何前一位使用者的清單內容
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy milk', page_text)
+
