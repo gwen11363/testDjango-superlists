@@ -1,3 +1,4 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException
@@ -6,7 +7,7 @@ import time
 
 MAX_WAIT = 5
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
@@ -31,7 +32,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_start_a_list_and_retrieve_it_later(self):
         #發現一個很酷的線上待辦事項app
         #察看首頁
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         #發現網頁標題與標頭顯示待辦事項清單
         self.assertIn('To-Do', self.browser.title)
@@ -67,6 +68,3 @@ class NewVisitorTest(unittest.TestCase):
         #網頁有一些文字說明這個效果
         self.fail('Finish the test!')
         #前往URL-顯示使用者的代辦清單
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
