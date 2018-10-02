@@ -52,9 +52,10 @@ class NewVisitorTest(LiveServerTestCase):
         #按下enter時，網頁會更新，現在網頁列出
         #"1.購買孔雀羽毛"，一個待辦事項清單項目
         inputbox.send_keys(Keys.ENTER)
-        user_unique_list_url = self.browser.current_url
-        self.assertRegex(user_unique_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
+
+        user_unique_list_url = self.browser.current_url
+        self.assertRegex(user_unique_list_url, 'lists/.+')
 
         #此時仍有一個文字方塊，讓使用者可以輸入另一個項目
         #輸入"使用孔雀羽毛製作蒼蠅"
@@ -82,6 +83,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Buy milk')
         inputbox.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table('3: Buy milk')
 
         #新使用者取得獨一無二url
         other_user_unique_url = self.browser.current_url
