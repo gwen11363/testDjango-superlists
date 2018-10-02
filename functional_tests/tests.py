@@ -94,7 +94,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Buy milk')
         inputbox.send_keys(Keys.ENTER)
-        self.check_for_row_in_list_table('1: Buy milk')
+        self.check_for_row_in_list_table('2: Buy milk')
 
         #新使用者取得獨一無二url
         other_user_unique_url = self.browser.current_url
