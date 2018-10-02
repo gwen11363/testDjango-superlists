@@ -29,7 +29,7 @@ class NewVisitorTest(LiveServerTestCase):
                     raise e
                 time.sleep(0.1)
 
-    def test_can_start_a_list_and_retrieve_it_later(self):
+    def test_can_start_a_list_for_one_user(self):
         #發現一個很酷的線上待辦事項app
         #察看首頁
         self.browser.get(self.live_server_url)
@@ -67,7 +67,18 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
 
-        #新的使用者來到網站
+
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        #第一個使用者新開了一個新的todo選單
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy peacock feathers')
+        inputbox.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table('1: Buy peacock feathers')
+
+        #此使用者發現自己有獨一無二的todo url
+        user_unique_list_url = self.browser.current_url
+        self.assertRegex(user_unique_list_url, 'lists/.+')
 
         #使用新的瀏覽器工作階段以確保上一位使用者的資料都不會被cookie等機制送出
         self.browser.quit()
@@ -83,7 +94,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Buy milk')
         inputbox.send_keys(Keys.ENTER)
-        self.check_for_row_in_list_table('3: Buy milk')
+        self.check_for_row_in_list_table('1: Buy milk')
 
         #新使用者取得獨一無二url
         other_user_unique_url = self.browser.current_url
@@ -94,4 +105,3 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertIn('Buy milk', page_text)
-
