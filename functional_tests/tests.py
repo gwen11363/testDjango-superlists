@@ -105,3 +105,27 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertIn('Buy milk', page_text)
+
+    def test_layout_and_styling(self):
+        #使用者前往首頁
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        #使用者發現輸入方塊已經被妥善地置中
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=5
+        )
+
+        #使用者開始編輯一個新清單，看到這裡的輸入欄位也妥善地置中
+        inputbox.send_keys('testing\n')
+        inputbox.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table('1: testing')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=5
+        )
