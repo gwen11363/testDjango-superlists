@@ -25,7 +25,7 @@ SECRET_KEY = '=1#$$-9hrmwtup8g=4td(d-k^+$k_47w0b#lw=b#z)=kik1x$z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['superlists-nana.nctu.me']
+ALLOWED_HOSTS = ['nana.nctu.me']
 
 
 # Application definition
