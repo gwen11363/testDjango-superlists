@@ -23,6 +23,12 @@ e.g.,, on Ubuntu:
 *path:/lib/systemd/system/gunicorn-SITENAME.service
 *see gunicorn-system.tamplate.conf
 *replace SITENAME with, e.g., nana.nctu.me
+*using commands to start service:
+    sudo systemctl start gunicorn-SITENAME.service
+    sudo systemctl enable gunicorn-SITENAME.service
+    (make symbolic link
+    /etc/systemd/system/multi-user.target.wants/gunicorn-nana.nctu.me.service ->
+    /lib/systemd/system/gunicorn-nana.nctu.me.service)
 
 ##資料夾結構
 Assume we have a user account at /home/username
